@@ -1,4 +1,4 @@
-# Restuarant ChatBot
+# Restaurant ChatBot
 
 ## Get Started - Scripts
 
