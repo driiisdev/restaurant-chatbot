@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  @apply scroll-smooth;
+}
+:root{
+  @apply w-full;
+}
+body {
+  @apply font-sans bg-white;
+}
+.chatBox {
+  @apply mx-auto my-32 flex justify-center;
+}
+.chatBox .chatBox-container {
+  @apply bg-green-500 border rounded-lg;
+}
+.chatBox .chatBox-container .chatBox-direction {
+  @apply flex flex-col;
+}
+.chatBox-direction .chatBox-header {
+  @apply py-3 px-7 text-center;
+}
+.chatBox-direction .chatBox-header h1 {
+  @apply font-bold text-2xl text-white;
+}
+.chatBox-direction .chatBox-main {
+  @apply w-80 bg-gray-100 shadow-inner shadow-slate-300;
+}
+.chatBox-main .chatBot-container {
+  @apply h-96 overflow-y-scroll py-5 flex flex-col space-y-5;
+}
+.chatBox-main .chatBot-container .chatBot-direction#bot {
+  @apply mx-1 flex flex-row justify-start;
+}
+.chatBox-main .chatBot-container .chatBot-direction#user {
+  @apply mx-1 flex flex-row justify-end;
+}
+.chatBot-direction#bot .message-container#bot{
+  @apply py-2 px-3 w-1/2 bg-white;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0rem;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+.chatBot-direction#user .message-container#user{
+  @apply py-2 px-4 w-1/2 bg-yellow-400;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0rem;
+}
+.chatBot-direction .message-container h5{
+  @apply font-normal text-base;
+}
+.chatBot-direction .message-container h6{
+  @apply font-thin text-xs text-right;
+}
+.chatBox-direction .chatBox-footer {
+  @apply text-center;
+}
+.chatBox-direction .chatBox-footer form {
+  @apply flex flex-row;
+}
+.chatBox-direction .chatBox-footer form input {
+  @apply w-full px-3 py-1;
+  border-top-right-radius: 0rem;
+  border-top-left-radius: 0rem;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0rem;
+}
+.chatBox-direction .chatBox-footer form button {
+  @apply px-5 py-2 font-semibold text-white text-center;
+  border-top-right-radius: 0rem;
+  border-top-left-radius: 0rem;
+  border-bottom-left-radius: 0rem;
+  border-bottom-right-radius: 0.5rem;
+}

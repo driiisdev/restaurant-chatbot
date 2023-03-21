@@ -44,25 +44,21 @@ io.on("connection", (socket) => {
   let userName = "";
   socket.session = socket.request.session;
 
-  socket.emit("bot-message", "Hello! What's your name?");
+  socket.emit("bot-message", 'Hello! What\'s your name?');
 
   socket.on("user-message", (message) => {
     console.log("User message received:", message);
 
     if (!userName) {
       userName = message;
-      socket.emit(
-        "bot-message",
-        `Welcome to the ChatBot, ${userName}! Place an order\n1. Typehere\n99. Typehere\n98. Typehere\n97. Typehere\n0. Cancel order`
+      socket.emit("bot-message",
+      `Welcome to the ChatBot, ${userName}!\n1. Place an order\n99. Checkout order\n98. See order history\n97. See current order\n0. Cancel order`
       );
     } else {
       switch (message) {
         case "1":
-          const itemOptions = Object.entries(fastFoods)
-            .map(([key, value]) => `${key}. ${value}`)
-            .join("\n");
-          socket.emit(
-            "bot-message",
+          const itemOptions = Object.entries(fastFoods).map(([key, value]) => `${key}. ${value}`).join('\n');
+          socket.emit("bot-message",
             `Here is a list of items you can order:\n${itemOptions}\nPlease select one by typing its number.`
           );
           break;
@@ -77,7 +73,7 @@ io.on("connection", (socket) => {
             socket.session.currentOrder.push(selectedItem);
             socket.emit(
               "bot-message",
-              `${selectedItem} has been added to your order. Do you want to add more items to your order? Type numbers. If not, type 99 to checkout.`
+              `${selectedItem} has been added to your order.\nDo you want to add more items to your order?\nType numbers.\nIf not, type 99 to checkout.`
             );
           } else {
             socket.emit("bot-message", "Invalid selection.");
@@ -92,8 +88,7 @@ io.on("connection", (socket) => {
             socket.emit("bot-message", "Order placed");
             delete socket.session.currentOrder;
           } else {
-            socket.emit(
-              "bot-message",
+            socket.emit("bot-message",
               "No order to place. Place an order\n1. See menu"
             );
           }
@@ -103,50 +98,41 @@ io.on("connection", (socket) => {
             const orderHistoryString = orderHistory
               .map((order, index) => `Order ${index + 1}: ${order.join(", ")}`)
               .join("\n");
-            socket.emit(
-              "bot-message",
+            socket.emit("bot-message",
               `Here is your order history:\n${orderHistoryString}`
             );
           } else {
-            socket.emit("bot-message", "No previous orders");
+            socket.emit("bot-message",
+            "No previous orders");
           }
           break;
         case "97":
-          if (
-            socket.session.currentOrder &&
-            socket.session.currentOrder.length
-          ) {
-            socket.emit(
-              "bot-message",
-              `Here is your current order: ${socket.session.currentOrder.join(
-                ", "
-              )}
+          if (socket.session.currentOrder && socket.session.currentOrder.length) {
+            socket.emit("bot-message",
+              `Here is your current order: ${socket.session.currentOrder.join(", ")}\n
 
               Type 99 to checkout your order or 0 to cancel.`
             );
           } else {
-            socket.emit(
-              "bot-message",
-              "No current order. Place an order\n1. See menu"
+            socket.emit("bot-message",
+              "No current order.\nPlace an order\n1. See menu"
             );
           }
           break;
         case "0":
-          if (
-            socket.session.currentOrder &&
-            socket.session.currentOrder.length
-          ) {
-            socket.emit("bot-message", "Order cancelled");
+          if (socket.session.currentOrder && socket.session.currentOrder.length) {
+            socket.emit("bot-message",
+              "Order cancelled");
             delete socket.session.currentOrder;
           } else {
-            socket.emit(
-              "bot-message",
-              "No current order to cancel. Place an order\n1. See menu"
+            socket.emit("bot-message",
+              "No current order to cancel.\nPlace an order\n1. See menu"
             );
           }
           break;
         default:
-          socket.emit("bot-message", "Invalid selection.");
+          socket.emit("bot-message",
+            "Invalid selection.");
           break;
       }
     }

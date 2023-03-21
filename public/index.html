@@ -5,75 +5,95 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChatBot</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div id="chatBox"></div>
-<form>
-  <input id="inputField" type="text">
-  <button id="sendButton" type="button">Send</button>
-</form>
+  <div class="chatBox">
+    <div class="chatBox-container">
+      <div class="chatBox-direction">
+        <div class="chatBox-header">
+          <h1>Restaurant ChatBot</h1>
+        </div>
+        <div class="chatBox-main">
+          <div class="chatBot-container"></div>
+        </div>
+        <div class="chatBox-footer">
+          <form>
+            <input id="inputField" type="text" placeholder="Send a message"/>
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="static/jquery.js"></script>
 <script>
-  // Establish a socket connection to the server
-const socket = io();
+  $(document).ready(()=>{
+    // Establish a socket connection to the server
+    const socket = io();
 
-// Query DOM elements
-const inputField = document.getElementById("inputField");
-const chatBox = document.getElementById("chatBox");
+    // Query DOM elements
+    const chatBotContainer = $(".chatBot-container");
+    const inputField = $("#inputField");
 
-// Helper function to append a message to the chat box
-function appendMessage(message, sender) {
-  const messageElement = document.createElement("div");
-  messageElement.classList.add("message-text", sender);
-  messageElement.textContent = message;
-  
-  const timestamp = new Date().toLocaleTimeString(); // create timestamp
-  const timestampElement = document.createElement("span"); // create span element for timestamp
-  timestampElement.classList.add("timestamp");
-  timestampElement.textContent = timestamp;
-  
-  const messageContainer = document.createElement("div");
-  messageContainer.classList.add("message-container");
-  messageContainer.appendChild(messageElement);
-  messageContainer.appendChild(timestampElement);
-  chatBox.appendChild(messageContainer);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+    // function to append a message to the chat box
+    function appendMessage(message, sender) {
+      const messageElement = $("<h5>")
+        .addClass("message")
+        .text(message);
+      
+      // create timestamp
+      const timestamp = new Date().toLocaleTimeString();
+      const timestampElement = $("<h6>")
+        .addClass("message-time")
+        .text(timestamp);
 
-// Handle sending messages
-function sendMessage() {
-  const message = inputField.value.trim();
-  if (message === "") {
-    return;
-  }
-  appendMessage(message, "user");
-  socket.emit("user-message", message);
-  inputField.value = "";
-}
+      const messageContainer = $("<div>")
+        .addClass("message-container")
+        .attr("id", sender);
 
-// Handle receiving messages from the server
-socket.on("bot-message", (message) => {
-  appendMessage(message, "bot");
-});
+      const chatBotDirection = $("<div>") 
+        .addClass("chatBot-direction")
+        .attr("id", sender);
 
-// Attach event listeners
-document.querySelector("form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  sendMessage();
-});
+      messageElement.html(message.replace(/\n/g, "<br>"));
+      messageContainer.append(messageElement, timestampElement);
+      chatBotDirection.append(messageContainer);
+      chatBotContainer.append(chatBotDirection);
+    }
 
-document.getElementById("sendButton").addEventListener("click", sendMessage);
+    // Handle sending messages
+    async function sendMessage() {
+      const message = inputField.val();
+      if (message === "") {
+        return;
+      }   
+      appendMessage(message, "user");
+      socket.emit("user-message", message);
+      inputField.val("");
+    }
 
-document.getElementById("inputField").addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    sendMessage();
-  }
-});
+    // Handle receiving messages from the server
+    socket.on("bot-message", (message) => {
+      appendMessage(message, "bot");
+    });
 
+    // Attach event listeners
+    $("form").on("submit", (e)=>{
+      e.preventDefault();
+      sendMessage();
+    })
+
+    inputField.on("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  });
 </script>
 </html>
