@@ -65,6 +65,7 @@
       messageContainer.append(messageElement, timestampElement);
       chatBotDirection.append(messageContainer);
       chatBotContainer.append(chatBotDirection);
+      chatBotContainer.scrollTop(chatBotContainer.prop("scrollHeight"));
     }
 
     // Handle sending messages
